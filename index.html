@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bruingo!</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+</head>
+<body>
+
+<button class="randomize">Reset and randomize</button>
+
+<table id="board">
+	<tbody>
+	</tbody>
+</table>
+</body>
+
+<script type="text/javascript">
+
+$(function() {
+	var size = 5;
+	var middle = 2;
+	var table = $('#board');
+	var imageCount = 26;
+	var freeImage = 'free.jpg';
+	var imgs = [];
+	var checkedImgs = [];
+
+	for (var row = 0; row < size; row++) {
+		var tr = $('<tr></tr>');
+		table.append(tr);
+
+		for (var col = 0; col < size; col++) {
+			(function() {
+				var td = $('<td></td>');
+				var a = $('<a href="#"></a>');
+				var img = $('<img src="boxes/free.jpg" width="100" height="100"></img>');
+				var checkedImg = $('<div style="position:relative; display: none; cursor: pointer"><img src="boxes/checked.png" width="100" height="100" style="position:absolute; top: 0; left: 0;"></img></div>');
+
+				if (!(row == middle && col == middle)) {
+					imgs.push(img);
+					checkedImgs.push(checkedImg);
+				}
+
+				a.append(img);
+				td.append(checkedImg);
+				td.append(a);
+				tr.append(td);
+
+				a.click(function(e) {
+					e.preventDefault();
+					checkedImg.toggle();
+				});
+
+				checkedImg.click(function(e) {
+					e.preventDefault();
+					checkedImg.toggle();
+				});
+			})();
+		}
+	}
+
+	$('.randomize').click(function() {
+		var used = [];
+
+		for (var i = 0; i < imgs.length; i++) {
+			var index = Math.ceil(Math.random() * imageCount);
+			while (used.indexOf(index) != -1) {
+				index = Math.ceil(Math.random() * imageCount);
+			}
+
+			var src = "boxes/" + index + "B.jpg";
+			imgs[i].attr('src', src);
+			checkedImgs[i].hide();
+		}
+	});
+
+	$('.randomize').click();
+});
+
+</script>
+</html>
