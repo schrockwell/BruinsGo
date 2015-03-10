@@ -7,12 +7,21 @@
 </head>
 <body>
 
-<button class="randomize">Reset and randomize</button>
+<button class="randomize">Reset and Randomize</button>
+
 
 <table id="board">
 	<tbody>
 	</tbody>
 </table>
+
+<!-- WINNARRRR -->
+<div id="winner" style="position: absolute; top: 100px; left: 100px; background-color: black; color: yellow; display: none;">
+	<h1>BINGO JACK</h1>
+	<img id="jack" src="boxes/jack-celebrating.gif"><br>
+	Click on image to close.
+</div>
+
 </body>
 
 <script type="text/javascript">
@@ -21,10 +30,11 @@ $(function() {
 	var size = 5;
 	var middle = 2;
 	var table = $('#board');
-	var imageCount = 26;
+	var imageCount = 29;
 	var freeImage = 'free.jpg';
 	var imgs = [];
 	var checkedImgs = [];
+	var win = false;
 
 	for (var row = 0; row < size; row++) {
 		var tr = $('<tr></tr>');
@@ -33,34 +43,88 @@ $(function() {
 		for (var col = 0; col < size; col++) {
 			(function() {
 				var td = $('<td></td>');
-				var a = $('<a href="#"></a>');
+				var div = $('<div class="square" style="position: relative; cursor: pointer;"></div>');
 				var img = $('<img src="boxes/free.jpg" width="100" height="100"></img>');
-				var checkedImg = $('<div style="position:relative; display: none; cursor: pointer"><img src="boxes/checked.png" width="100" height="100" style="position:absolute; top: 0; left: 0;"></img></div>');
+				var checkedImg = $('<img src="boxes/checked.png" width="100" height="100" style="position: absolute; top: 0; left: 0; display: none;"></img>');
 
 				if (!(row == middle && col == middle)) {
 					imgs.push(img);
 					checkedImgs.push(checkedImg);
 				}
 
-				a.append(img);
-				td.append(checkedImg);
-				td.append(a);
+				div.append(img);
+				div.append(checkedImg);
+				td.append(div);
 				tr.append(td);
 
-				a.click(function(e) {
-					e.preventDefault();
-					checkedImg.toggle();
-				});
+				div.attr("data-row", row);
+				div.attr("data-col", col);
+				div.attr("data-checked", 'false');
 
-				checkedImg.click(function(e) {
+				div.click(function(e) {
 					e.preventDefault();
 					checkedImg.toggle();
+
+					if (div.attr("data-checked") == 'true') {
+						div.attr("data-checked", 'false');
+					} else {
+						div.attr("data-checked", 'true');
+					}
+
+					// CHECK FOR WIN CONDITION
+					// Check each row for a win condition.
+					for (var row = 0; row < size; row++) {
+						var squares = $('.square[data-row="' + row + '"]');
+						var results = squares.map(function () { return $(this).attr("data-checked"); });
+
+						var testResults = jQuery.inArray("false", results);
+
+						if (testResults != -1) {
+							// blergh.  too lazy to invert this conditional.
+						} else {
+							win = true;
+						}
+					}
+
+					// Check each column for a win condition.
+					for (var col = 0; col < size; col++) {
+						var squares = $('.square[data-col="' + col + '"]');
+						var results = squares.map(function () { return $(this).attr("data-checked"); });
+
+						var testResults = jQuery.inArray("false", results);
+
+						if (testResults != -1) {
+							// blergh.  too lazy to invert this conditional.
+						} else {
+							win = true;
+						}
+					}
+
+					// Check [0,0] to [4,4] diagonal for win condition.
+					//var diag = [];
+					//diag.push
+
+					// Check [0,4] to [4,0] diagonal for win condition.
+
+					if (win) {
+						$('#winner').toggle();
+					}
+
 				});
 			})();
 		}
 	}
 
+	$('#jack').click(function () {
+		$('#winner').toggle();
+		location.reload();
+	});
+
 	$('.randomize').click(function() {
+		// Reset
+		win = false;
+		$('.square').each(function() { $(this).attr("data-checked", 'false'); });
+
 		var used = [];
 
 		for (var i = 0; i < imgs.length; i++) {
