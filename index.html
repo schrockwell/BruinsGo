@@ -86,37 +86,43 @@ $(function() {
 					// CHECK FOR WIN CONDITION
 					// Check each row for a win condition.
 					for (var row = 0; row < size; row++) {
-						var squares = $('.square[data-row="' + row + '"]');
-						var results = squares.map(function () { return $(this).attr("data-checked"); });
-
-						var testResults = jQuery.inArray("false", results);
-
-						if (testResults != -1) {
-							// blergh.  too lazy to invert this conditional.
-						} else {
+						var results = $('.square[data-row="' + row + '"]').map(function () { return $(this).attr("data-checked"); });
+						if (jQuery.inArray("false", results) == -1) {
 							win = true;
 						}
 					}
 
 					// Check each column for a win condition.
 					for (var col = 0; col < size; col++) {
-						var squares = $('.square[data-col="' + col + '"]');
-						var results = squares.map(function () { return $(this).attr("data-checked"); });
-
-						var testResults = jQuery.inArray("false", results);
-
-						if (testResults != -1) {
-							// blergh.  too lazy to invert this conditional.
-						} else {
+						var results = $('.square[data-col="' + col + '"]').map(function () { return $(this).attr("data-checked"); });
+						if (jQuery.inArray("false", results) == -1) {
 							win = true;
 						}
 					}
 
 					// Check [0,0] to [4,4] diagonal for win condition.
-					//var diag = [];
-					//diag.push
+					var diag = [];
+					diag.push($('.square[data-col="0"][data-row="0"]').attr("data-checked"));
+					diag.push($('.square[data-col="1"][data-row="1"]').attr("data-checked"));
+					diag.push($('.square[data-col="2"][data-row="2"]').attr("data-checked"));
+					diag.push($('.square[data-col="3"][data-row="3"]').attr("data-checked"));
+					diag.push($('.square[data-col="4"][data-row="4"]').attr("data-checked"));
+
+					if (jQuery.inArray("false", diag) == -1) {
+						win = true;
+					}
 
 					// Check [0,4] to [4,0] diagonal for win condition.
+					var diag = [];
+					diag.push($('.square[data-col="0"][data-row="4"]').attr("data-checked"));
+					diag.push($('.square[data-col="1"][data-row="3"]').attr("data-checked"));
+					diag.push($('.square[data-col="2"][data-row="2"]').attr("data-checked"));
+					diag.push($('.square[data-col="3"][data-row="1"]').attr("data-checked"));
+					diag.push($('.square[data-col="4"][data-row="0"]').attr("data-checked"));
+
+					if (jQuery.inArray("false", diag) == -1) {
+						win = true;
+					}
 
 					if (win) {
 						$('#winner').toggle();
