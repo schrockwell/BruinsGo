@@ -47,6 +47,7 @@ $(function() {
 	var imgs = [];
 	var checkedImgs = [];
 	var win = false;
+	var loadSize = 5;
 
 	for (var row = 0; row < size; row++) {
 		var tr = $('<tr></tr>');
@@ -142,39 +143,51 @@ $(function() {
 		// Reset
 		win = false;
 		$('.square').each(function() { $(this).attr("data-checked", 'false'); });
+		$('img').attr('src', 'boxes/free.jpg');
 
 
-    // Use random.org API to get an array of true random numbers from atmospheric noise:
-    var rand_ints;    // Array of unique random ints from 1 to 29.
+		// Use random.org API to get an array of true random numbers from atmospheric noise:
+		var rand_ints;    // Array of unique random ints from 1 to 29.
 
-    var http = new XMLHttpRequest();
-    http.open("POST", "https://api.random.org/json-rpc/1/invoke", true);
-    
-    // Upon successfull request:
-    http.onreadystatechange = function() {
-      if (http.readyState == 4) {
-        
-        // Assign the ints to the array:
-        rand_ints = JSON.parse(http.responseText).result.random.data;
-        
-        // For each image:
-        for (var i = 0; i < imgs.length; i++) {
-          // Set the source:
-          var src = "boxes/" + rand_ints[i] + "B.jpg";
-          imgs[i].attr('src', src);
-          checkedImgs[i].hide();
-        }
-      } 
-    }
-    http.setRequestHeader("Content-type", "application/json-rpc");
-    // This is bekroogle's personal key, but no biggie. Just don't get me in trouble =]
-    // "n": 29 gives us an array of 29 ints.
-    // "replacement": false ensures that there are no repeats.
-    http.send('{"jsonrpc":"2.0","method":"generateIntegers","params":{"apiKey":"4ab06f95-751f-45ef-a136-29d093323fa3","n":29,"min":1,"max":29,"replacement":false,"base":10},"id":28014}');
+		var http = new XMLHttpRequest();
+		http.open("POST", "https://api.random.org/json-rpc/1/invoke", true);
+
+		// Upon successfull request:
+		http.onreadystatechange = function() {
+			if (http.readyState == 4) {
+				// Assign the ints to the array:
+				rand_ints = JSON.parse(http.responseText).result.random.data;
+
+				var delay = 0;
+				// For each image:
+				for (var i = 0; i < imgs.length; i++) {
+					
+					(function() {			
+						var src = "boxes/" + rand_ints[i] + "B.jpg";
+						var img = imgs[i];
+						var checkedImg = checkedImgs[i];
+
+						setTimeout(function() {
+							// Set the source:
+
+							img.attr('src', src);
+							checkedImg.hide();
+						}, delay)
+					})();
+
+					delay = delay + 100;
+				}
+			} 
+		}
+		http.setRequestHeader("Content-type", "application/json-rpc");
+		// This is bekroogle's personal key, but no biggie. Just don't get me in trouble =]
+		// "n": 29 gives us an array of 29 ints.
+		// "replacement": false ensures that there are no repeats.
+		http.send('{"jsonrpc":"2.0","method":"generateIntegers","params":{"apiKey":"4ab06f95-751f-45ef-a136-29d093323fa3","n":29,"min":1,"max":29,"replacement":false,"base":10},"id":28014}');
+		});
+
+		$('.randomize').click();
 	});
-
-	$('.randomize').click();
-});
 
 </script>
 </html>
