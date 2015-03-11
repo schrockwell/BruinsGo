@@ -85,6 +85,9 @@ $(function() {
 					}
 
 					// CHECK FOR WIN CONDITION
+
+          // Automatically mark the free space:
+          $('.square[data-col="2"][data-row="2"]').attr("data-checked", "true");
 					// Check each row for a win condition.
 					for (var row = 0; row < size; row++) {
 						var results = $('.square[data-row="' + row + '"]').map(function () { return $(this).attr("data-checked"); });
