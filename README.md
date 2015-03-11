@@ -9,3 +9,9 @@ This could probably have been implemented more elegantly.  Feel free to complete
 OR Feel free to throw a pull request at us!
 
 https://github.com/schrockwell/BruinsGo
+
+## Contributors
+Rockwell Schrock (schrockwell)
+Erik Reynolds (ejreynolds)
+Benjamin Kruger (bekroogle)
+Ryan Wheeler (precisely3)
