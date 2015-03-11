@@ -57,8 +57,8 @@ $(function() {
 			(function() {
 				var td = $('<td></td>');
 				var div = $('<div class="square" style="position: relative; cursor: pointer;"></div>');
-				var img = $('<img src="boxes/free.jpg" width="100" height="100"></img>');
-				var checkedImg = $('<img src="boxes/checked.png" width="100" height="100" style="position: absolute; top: 0; left: 0; display: none;"></img>');
+				var img = $('<img class="bingoBox" src="boxes/free.jpg" width="100" height="100"></img>');
+				var checkedImg = $('<img class="checkOverlay" src="boxes/checked.png" width="100" height="100" style="position: absolute; top: 0; left: 0; display: none;"></img>');
 
 				if (!(row == middle && col == middle)) {
 					imgs.push(img);
@@ -139,15 +139,16 @@ $(function() {
 
 	$('#jack').click(function () {
 		$('#winner').toggle();
-		location.reload();
 	});
 
 	$('.randomize').click(function() {
 		// Reset
 		win = false;
-		$('.square').each(function() { $(this).attr("data-checked", 'false'); });
-		$('img').attr('src', 'boxes/free.jpg');
-
+		$('.square').each(function() {
+			$(this).attr("data-checked", 'false');
+			$(this).find('.checkOverlay').hide();
+			$(this).find('.bingoBox').each(function () { $(this).attr('src', 'boxes/free.jpg'); 	});
+		});
 
 		// Use random.org API to get an array of true random numbers from atmospheric noise:
 		var rand_ints;    // Array of unique random ints from 1 to 29.
@@ -164,8 +165,8 @@ $(function() {
 				var delay = 0;
 				// For each image:
 				for (var i = 0; i < imgs.length; i++) {
-					
-					(function() {			
+
+					(function() {
 						var src = "boxes/" + rand_ints[i] + "B.jpg";
 						var img = imgs[i];
 						var checkedImg = checkedImgs[i];
@@ -180,7 +181,7 @@ $(function() {
 
 					delay = delay + 100;
 				}
-			} 
+			}
 		}
 		http.setRequestHeader("Content-type", "application/json-rpc");
 		// This is bekroogle's personal key, but no biggie. Just don't get me in trouble =]
